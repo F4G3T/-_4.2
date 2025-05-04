@@ -208,8 +208,8 @@ int main() {
             total_qr_err += qr_err;
         }
 
-        cout << "LU среднее врем€ за 10 запусков: " << total_lu_time / runs <<  " ms\t—редн€€ погрешность за 10 запусков: " << total_lu_err / runs << endl;
-        cout << "QR среднее врем€ за 10 запусков: " << total_qr_time / runs <<  " ms\t—редн€€ погрешность за 10 запусков: " << total_qr_err / runs << endl << endl;
+        cout << "LU average time over 10 launches: " << total_lu_time / runs <<  " ms\tAverage error over 10 launches: " << total_lu_err / runs << endl;
+        cout << "QR average time over 10 launches: " << total_qr_time / runs <<  " ms\tAverage error over 10 launches: " << total_qr_err / runs << endl << endl;
     }
 
     return 0;
