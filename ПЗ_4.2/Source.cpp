@@ -16,7 +16,7 @@ public:
     Matrix(int n, int m) : rows(n), cols(m), data(n, vector<double>(m, 0)) {}
 };
 
-// Генерация матрицы A по варианту 9
+// Генерация Матрицы A по варианту 9
 Matrix generate_A(int N) {
     Matrix A(N, N);
     for (int i = 0; i < N; ++i) {
@@ -32,7 +32,7 @@ Matrix generate_A(int N) {
     return A;
 }
 
-// Генерация вектора f = A * x*, где x* = [1,1,...,1]
+// Генерация вектора F = A * x*, где x* = [1,1,...,1]
 vector<double> generate_f(const Matrix& A) {
     int N = A.rows;
     vector<double> f(N, 0.0);
@@ -51,7 +51,7 @@ void LU_decomposition(Matrix& A, vector<int>& perm) {
     for (int i = 0; i < N; ++i) perm[i] = i;
 
     for (int k = 0; k < N; ++k) {
-        // Поиск ведущего элемента
+        // Поиск ведущего элемента 
         int max_row = k;
         for (int i = k; i < N; ++i) {
             if (abs(A.data[i][k]) > abs(A.data[max_row][k])) {
@@ -61,7 +61,7 @@ void LU_decomposition(Matrix& A, vector<int>& perm) {
         swap(A.data[k], A.data[max_row]);
         swap(perm[k], perm[max_row]);
 
-        // Исключение
+        // Исключение 
         for (int i = k + 1; i < N; ++i) {
             A.data[i][k] /= A.data[k][k];
             for (int j = k + 1; j < N; ++j) {
@@ -71,7 +71,7 @@ void LU_decomposition(Matrix& A, vector<int>& perm) {
     }
 }
 
-// Решение СЛАУ методом LU
+// Решение Слау методом LU
 vector<double> LU_solve(Matrix& LU, const vector<int>& perm, const vector<double>& f) {
     int N = LU.rows;
     vector<double> x(N), y(N);
@@ -113,7 +113,7 @@ void QR_decomposition(const Matrix& A, Matrix& Q, Matrix& R) {
             double c = a / norm;
             double s = b / norm;
 
-            // Обновляем строки R
+            // Обновление Матрицы R
             for (int k = j; k < N; ++k) {
                 double Rj = R.data[j][k];
                 double Ri = R.data[i][k];
@@ -121,7 +121,7 @@ void QR_decomposition(const Matrix& A, Matrix& Q, Matrix& R) {
                 R.data[i][k] = -s * Rj + c * Ri;
             }
 
-            // Обновляем матрицу Q
+            // Обновление Матрицы Q
             for (int k = 0; k < N; ++k) {
                 double Qk = Q.data[k][j];
                 double Qi = Q.data[k][i];
@@ -132,7 +132,7 @@ void QR_decomposition(const Matrix& A, Matrix& Q, Matrix& R) {
     }
 }
 
-// Решение СЛАУ методом QR
+// Решение СЛАУ Методом QR
 vector<double> QR_solve(const Matrix& Q, const Matrix& R, const vector<double>& f) {
     int N = R.rows;
     // Вычисляем Q^T * f
@@ -163,7 +163,7 @@ double vector_norm(const vector<double>& v) {
 int main() {
     setlocale(LC_ALL, "Russian");
     vector<int> sizes = { 250, 500, 1000 };
-    const int runs = 3;
+    const int runs = 10;
 
     for (int N : sizes) {
         cout << "N = " << N << endl;
@@ -176,7 +176,7 @@ int main() {
             Matrix A = generate_A(N);
             vector<double> f = generate_f(A);
 
-            // LU-метод
+            // LU-Метод
             Matrix LU = A;
             vector<int> perm;
             auto start = high_resolution_clock::now();
@@ -186,7 +186,7 @@ int main() {
             auto lu_time = duration_cast<milliseconds>(stop - start).count();
             total_lu_time += lu_time;
 
-            // QR-метод
+            // QR-Метод
             Matrix Q(N, N), R(N, N);
             start = high_resolution_clock::now();
             QR_decomposition(A, Q, R);
@@ -195,7 +195,7 @@ int main() {
             auto qr_time = duration_cast<milliseconds>(stop - start).count();
             total_qr_time += qr_time;
 
-            // Вычисление погрешностей
+            // Вычисление погрешности
             double lu_err = 0.0, qr_err = 0.0;
             for (int i = 0; i < N; ++i) {
                 lu_err += (x_lu[i] - 1.0) * (x_lu[i] - 1.0);
