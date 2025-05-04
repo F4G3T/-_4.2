@@ -32,7 +32,7 @@ Matrix generate_A(int N) {
     return A;
 }
 
-// Генерация вектора F = A * x*, где x* = [1,1,...,1]
+
 vector<double> generate_f(const Matrix& A) {
     int N = A.rows;
     vector<double> f(N, 0.0);
@@ -44,14 +44,14 @@ vector<double> generate_f(const Matrix& A) {
     return f;
 }
 
-// LU-разложение с выбором ведущего элемента
+
 void LU_decomposition(Matrix& A, vector<int>& perm) {
     int N = A.rows;
     perm.resize(N);
     for (int i = 0; i < N; ++i) perm[i] = i;
 
     for (int k = 0; k < N; ++k) {
-        // Поиск ведущего элемента 
+        
         int max_row = k;
         for (int i = k; i < N; ++i) {
             if (abs(A.data[i][k]) > abs(A.data[max_row][k])) {
@@ -61,7 +61,7 @@ void LU_decomposition(Matrix& A, vector<int>& perm) {
         swap(A.data[k], A.data[max_row]);
         swap(perm[k], perm[max_row]);
 
-        // Исключение 
+        
         for (int i = k + 1; i < N; ++i) {
             A.data[i][k] /= A.data[k][k];
             for (int j = k + 1; j < N; ++j) {
@@ -71,12 +71,11 @@ void LU_decomposition(Matrix& A, vector<int>& perm) {
     }
 }
 
-// Решение Слау методом LU
 vector<double> LU_solve(Matrix& LU, const vector<int>& perm, const vector<double>& f) {
     int N = LU.rows;
     vector<double> x(N), y(N);
 
-    // Прямой ход
+    
     for (int i = 0; i < N; ++i) {
         y[i] = f[perm[i]];
         for (int j = 0; j < i; ++j) {
@@ -84,7 +83,7 @@ vector<double> LU_solve(Matrix& LU, const vector<int>& perm, const vector<double
         }
     }
 
-    // Обратный ход
+    
     for (int i = N - 1; i >= 0; --i) {
         x[i] = y[i];
         for (int j = i + 1; j < N; ++j) {
@@ -95,7 +94,7 @@ vector<double> LU_solve(Matrix& LU, const vector<int>& perm, const vector<double
     return x;
 }
 
-// QR-разложение методом Гивенса
+
 void QR_decomposition(const Matrix& A, Matrix& Q, Matrix& R) {
     int N = A.rows;
     Q = Matrix(N, N);
@@ -113,7 +112,7 @@ void QR_decomposition(const Matrix& A, Matrix& Q, Matrix& R) {
             double c = a / norm;
             double s = b / norm;
 
-            // Обновление Матрицы R
+            
             for (int k = j; k < N; ++k) {
                 double Rj = R.data[j][k];
                 double Ri = R.data[i][k];
@@ -121,7 +120,7 @@ void QR_decomposition(const Matrix& A, Matrix& Q, Matrix& R) {
                 R.data[i][k] = -s * Rj + c * Ri;
             }
 
-            // Обновление Матрицы Q
+            
             for (int k = 0; k < N; ++k) {
                 double Qk = Q.data[k][j];
                 double Qi = Q.data[k][i];
@@ -132,10 +131,9 @@ void QR_decomposition(const Matrix& A, Matrix& Q, Matrix& R) {
     }
 }
 
-// Решение СЛАУ Методом QR
 vector<double> QR_solve(const Matrix& Q, const Matrix& R, const vector<double>& f) {
     int N = R.rows;
-    // Вычисляем Q^T * f
+   
     vector<double> qt_f(N, 0.0);
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
@@ -143,7 +141,7 @@ vector<double> QR_solve(const Matrix& Q, const Matrix& R, const vector<double>& 
         }
     }
 
-    // Обратная подстановка для R
+    
     vector<double> x(N);
     for (int i = N - 1; i >= 0; --i) {
         x[i] = qt_f[i];
@@ -153,7 +151,7 @@ vector<double> QR_solve(const Matrix& Q, const Matrix& R, const vector<double>& 
         x[i] /= R.data[i][i];
     }
     return x;
-}// Вычисление нормы вектора
+}
 double vector_norm(const vector<double>& v) {
     double norm = 0.0;
     for (double x : v) norm += x * x;
@@ -172,11 +170,11 @@ int main() {
         double total_lu_err = 0.0, total_qr_err = 0.0;
 
         for (int run = 0; run < runs; ++run) {
-            // Генерация данных
+            
             Matrix A = generate_A(N);
             vector<double> f = generate_f(A);
 
-            // LU-Метод
+            
             Matrix LU = A;
             vector<int> perm;
             auto start = high_resolution_clock::now();
@@ -186,7 +184,7 @@ int main() {
             auto lu_time = duration_cast<milliseconds>(stop - start).count();
             total_lu_time += lu_time;
 
-            // QR-Метод
+            
             Matrix Q(N, N), R(N, N);
             start = high_resolution_clock::now();
             QR_decomposition(A, Q, R);
@@ -195,7 +193,7 @@ int main() {
             auto qr_time = duration_cast<milliseconds>(stop - start).count();
             total_qr_time += qr_time;
 
-            // Вычисление погрешности
+            
             double lu_err = 0.0, qr_err = 0.0;
             for (int i = 0; i < N; ++i) {
                 lu_err += (x_lu[i] - 1.0) * (x_lu[i] - 1.0);
